@@ -2,7 +2,7 @@ require(plyr)
 library(lubridate)
 library(lattice)
 library(dplyr)
-songs <- read.csv('data/ken_songs.tsv', sep='\t')
+songs <- read.csv('../data/ken_songs.tsv', sep='\t')
 songs$artist <- tolower(songs$artist)
 songs$song <- tolower(songs$song)
 

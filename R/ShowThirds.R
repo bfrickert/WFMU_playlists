@@ -1,4 +1,4 @@
-songs <- read.csv('C:/dev/wfmu/data/ken_songs.tsv', sep='\t')
+songs <- read.csv('../data/ken_songs.tsv', sep='\t')
 
 library(dplyr)
 dat_max <- songs %>% group_by(date) %>% filter(row_number(X)==n())
@@ -16,4 +16,4 @@ songs$hour <- sapply(songs$fraction, function(x) {
   else {return("Third")}
 })
 
-write.table(songs, file="c:/dev/WFMU/data/songs_hour.tsv", sep="\t")
+write.table(songs, file="../data/songs_hour.tsv", sep="\t")

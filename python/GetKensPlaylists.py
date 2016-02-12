@@ -20,8 +20,8 @@ def scrapeKenPlaylists(i):
 
 df = pd.DataFrame()
 
-for n in range(2001,2015):
+for n in range(2001,2016):
     df = df.append(scrapeKenPlaylists(n))
 
 df = df.append(scrapeKenPlaylists(''))
-df.to_csv('data/ken_playlists.tsv', sep='\t')
+df.to_csv('../data/ken_playlists.tsv', sep='\t')
