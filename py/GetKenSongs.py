@@ -1,5 +1,5 @@
 import requests
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import pandas as pd
 import re
 import time
@@ -32,7 +32,7 @@ def scrapeWFMUPlaylist(url):
     return df
 
 df = pd.DataFrame()
-url_df = pd.read_csv('../data/ken_playlists.tsv', sep='\t')
+url_df = pd.read_csv('data/ken_playlists.tsv', sep='\t')
 
 
 urls = [row[1] for index, row in url_df.iterrows()]
@@ -44,4 +44,4 @@ for url in urls:
 
 
 df.columns = ['artist','song','date']
-df.to_csv('../data/ken_songs.tsv', sep='\t')
+df.to_csv('data/ken_songs.tsv', sep='\t')

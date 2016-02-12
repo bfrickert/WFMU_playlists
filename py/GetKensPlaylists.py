@@ -1,5 +1,5 @@
 import requests
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import pandas as pd
 
 def scrapeKenPlaylists(i):
@@ -24,4 +24,4 @@ for n in range(2001,2016):
     df = df.append(scrapeKenPlaylists(n))
 
 df = df.append(scrapeKenPlaylists(''))
-df.to_csv('../data/ken_playlists.tsv', sep='\t')
+df.to_csv('data/ken_playlists.tsv', sep='\t')
