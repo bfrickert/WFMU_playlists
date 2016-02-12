@@ -60,5 +60,5 @@ s1 = pd.Series(amp, name='song')
 s2 = pd.Series(tamp, name='artist')
 final = pd.concat([s1, s2], axis=1)
 
-final.to_csv("data/nltk.tsv", "\t")
+final.to_csv("data/playlist.tsv", "\t")
 
