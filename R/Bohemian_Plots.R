@@ -1,4 +1,4 @@
-songs <- read.csv('../data/songs_hour.tsv', sep='\t')
+songs <- read.csv('data/ken_songs.tsv', sep='\t')
 
 library(plyr)
 songs$bohemian <- grepl("bohemian", songs$song, ignore.case = TRUE)
@@ -19,7 +19,7 @@ p1 <-
   geom_line() +
   geom_smooth(alpha=.2, size=1) +
   ggtitle("Instances of 'Bohemian'")
-jpeg('../viz/bohemian.jpeg', width=20, height=30, units='cm', res=100)
+jpeg('viz/bohemian.jpeg', width=20, height=30, units='cm', res=100)
 p1
 dev.off()
 # Second plot
@@ -28,9 +28,9 @@ p2 <-
   geom_line(alpha=.3) +
   geom_smooth(alpha=.2, size=1) +
   ggtitle("Instances of 'Rhapsody'")
-jpeg('../viz/rhapsody.jpeg', width=20, height=30, units='cm', res=100)
+jpeg('viz/rhapsody.jpeg', width=20, height=30, units='cm', res=100)
 p2
 dev.off()
 
-write.table(x,"../data/x.tsv",sep="\t")
-write.table(y,"../data/y.tsv",sep="\t")
+write.table(x,"data/x.tsv",sep="\t")
+write.table(y,"data/y.tsv",sep="\t")

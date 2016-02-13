@@ -8,10 +8,7 @@ import StringIO
 import sys
 
 
-df = pd.read_table("data/songs_hour.tsv", sep='\t')
-m = np.mean(df['num_songs'])
-df['song_words_count'] = df['song'].str.count(' ') + 1
-
+df = pd.read_table("data/ken_songs.tsv", sep='\t')
 
 songs = df['song'].dropna().values
 txt = ' '.join(songs.tolist())

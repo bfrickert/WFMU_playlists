@@ -2,7 +2,7 @@ require(plyr)
 library(lubridate)
 library(lattice)
 library(dplyr)
-songs <- read.csv('../data/ken_songs.tsv', sep='\t')
+songs <- read.csv('data/ken_songs.tsv', sep='\t')
 songs$artist <- tolower(songs$artist)
 songs$song <- tolower(songs$song)
 
@@ -21,7 +21,11 @@ cnts_unqsongs <- ddply(songs,'artist',
               count = length(unique(song)))
 cnts_unqsongs <- cnts_unqsongs[order(cnts_unqsongs$count, decreasing=TRUE),]
 
-cnt_artists <- ddply(songs, .(songs$artist, songs$year), nrow)
+songs$year <- format(mdy(songs$date), '%Y')
+
+songs.g <- group_by(select(songs, artist, year), artist, year)
+cnt_artists <- dplyr::summarize(songs.g, cnt=n())
+#cnt_artists <- ddply(select(songs, -date), .(songs$artist, songs$year, nrow))
 names(cnt_artists) <- c("artist", "year","count")
 cnt_artists <- cnt_artists[order(cnt_artists$count, decreasing=TRUE),]
 cnt_artists <- filter(cnt_artists, artist != 'fail')
@@ -47,7 +51,7 @@ cnt_unknown <- cnt_unknown[order(cnt_unknown$count, decreasing=TRUE),]
 # Count of elakelaiset songs -- a lot of misspellings
 cnt_ek <- ddply(elakelaiset, .(elakelaiset$song), nrow)
 
-jpeg("mostplayed.jpeg")
+jpeg("viz/mostplayed.jpeg")
 #install.packages("ggplot2")
 # Most played Artists
 library(ggplot2)
@@ -67,3 +71,4 @@ barchart(as.integer(count) ~ as.character(artist) | factor(year), data=d,
            main="barchart",
            scales=list(x=list(rot=90))
            )
+
