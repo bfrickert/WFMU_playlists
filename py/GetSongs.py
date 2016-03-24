@@ -4,6 +4,7 @@ import pandas as pd
 import re
 import time
 import datetime
+import sys
 
 def scrapeWFMUPlaylist(url):
     response = requests.get(url)
@@ -39,7 +40,7 @@ def scrapeWFMUPlaylist(url):
     return df
 
 df = pd.DataFrame()
-url_df = pd.read_csv('data/shiny/IC/playlists.tsv', sep='\t')
+url_df = pd.read_csv('data/{0}/playlists.tsv'.format(sys.argv[1]), sep='\t')
 
 
 urls = [row[1] for index, row in url_df.iterrows()]
@@ -53,4 +54,4 @@ for url in urls:
         pass
 
 df.columns = ['artist','song','date']
-df.to_csv('data/shiny/IC/songs.tsv', sep='\t')
+df.to_csv('shiny/data/{0}/songs.tsv'.format(sys.argv[1]), sep='\t')

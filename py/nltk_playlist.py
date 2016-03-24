@@ -7,8 +7,7 @@ import numpy as np
 import StringIO
 import sys
 
-
-df = pd.read_table("shiny/data/IC/songs.tsv", sep='\t')
+df = pd.read_table("shiny/data/{0}/songs.tsv".format(sys.argv[1]), sep='\t')
 
 songs = df['song'].dropna().values
 txt = ' '.join(songs.tolist())
@@ -57,5 +56,5 @@ s1 = pd.Series(amp, name='song')
 s2 = pd.Series(tamp, name='artist')
 final = pd.concat([s1, s2], axis=1)
 
-final.to_csv("shiny/data/IC/nltk_playlist.tsv", "\t")
+final.to_csv("shiny/data/{0}/nltk_playlist.tsv".format(sys.argv[1]), "\t")
 

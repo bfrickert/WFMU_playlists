@@ -1,9 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import sys
 
-def scrapeKenPlaylists(i):
-    url = "http://www.wfmu.org/playlists/IC%s" % i
+def scrapeKenPlaylists(i, initials):
+    url = "http://www.wfmu.org/playlists/%s%s" % (initials,i)
     try: 
         response = requests.get(url)
 
@@ -21,7 +22,8 @@ def scrapeKenPlaylists(i):
 df = pd.DataFrame()
 
 for n in range(2001,2016):
-    df = df.append(scrapeKenPlaylists(n))
+    df = df.append(scrapeKenPlaylists(n, sys.argv[1]))
 
-df = df.append(scrapeKenPlaylists(''))
-df.to_csv('data/shiny/IC/playlists.tsv', sep='\t')
+df = df.append(scrapeKenPlaylists('',sys.argv[1]))
+df.drop_duplicates()
+df.to_csv('data/{0}/playlists.tsv'.format(sys.argv[1]), sep='\t')
