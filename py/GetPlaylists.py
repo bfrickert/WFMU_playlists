@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 def scrapeKenPlaylists(i):
-    url = "http://www.wfmu.org/playlists/KF%s" % i
+    url = "http://www.wfmu.org/playlists/IC%s" % i
     try: 
         response = requests.get(url)
 
@@ -24,4 +24,4 @@ for n in range(2001,2016):
     df = df.append(scrapeKenPlaylists(n))
 
 df = df.append(scrapeKenPlaylists(''))
-df.to_csv('data/ken_playlists.tsv', sep='\t')
+df.to_csv('data/shiny/IC/playlists.tsv', sep='\t')

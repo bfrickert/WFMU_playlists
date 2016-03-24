@@ -2,7 +2,9 @@ require(plyr)
 library(lubridate)
 library(lattice)
 library(dplyr)
-songs <- read.csv('data/ken_songs.tsv', sep='\t')
+library(ggplot2)
+library(plotly)
+songs <- read.csv('data/shiny/IC/songs.tsv', sep='\t')
 songs$artist <- tolower(songs$artist)
 songs$song <- tolower(songs$song)
 
@@ -19,6 +21,7 @@ songs <- within(songs, artist <-
 cnts_unqsongs <- ddply(songs,'artist',
               summarise,
               count = length(unique(song)))
+
 cnts_unqsongs <- cnts_unqsongs[order(cnts_unqsongs$count, decreasing=TRUE),]
 
 songs$year <- format(mdy(songs$date), '%Y')
@@ -34,31 +37,11 @@ cnt_songs <- ddply(songs, .(songs$artist, songs$song), nrow)
 names(cnt_songs) <- c("artist", "song", "count")
 cnt_songs <- cnt_songs[order(cnt_songs$count, decreasing=TRUE),]
 
-
-#elakelaiset songs
-elakelaiset <- songs[ which(songs$artist == 'elakelaiset'), ]
-
-# noonday underground
-noonday <- songs[ which(songs$artist == 'noonday underground'), ]
-cnt_noon <- ddply(noonday, .(noonday$artist, noonday$song), nrow)
-
-
-unknown <- songs[ which(songs$artist == 'unknown'), ]
-cnt_unknown <- ddply(unknown, .(unknown$artist, unknown$song), nrow)
-names(cnt_unknown) <- c("artist", "songs", "count")
-cnt_unknown <- cnt_unknown[order(cnt_unknown$count, decreasing=TRUE),]
-
-# Count of elakelaiset songs -- a lot of misspellings
-cnt_ek <- ddply(elakelaiset, .(elakelaiset$song), nrow)
-
-jpeg("viz/mostplayed.jpeg")
-#install.packages("ggplot2")
-# Most played Artists
-library(ggplot2)
-c <- ggplot(head(cnt_artists[ which(cnt_artists$artist != 'fail'), ], n=10), 
-              aes(fill=artist, x=artist, y=count))
-c + geom_bar(stat = "identity") + coord_flip()
-dev.off()
+c <- ggplot(head(filter(cnts_unqsongs, artist != 'fail'), n=10), 
+              aes(fill=artist, x=artist, y=count)) + 
+  geom_bar(stat = "identity") + coord_flip() + ggtitle("Most Unique Songs Played by These Artists") +
+  theme_bw()
+c
 
 songs$year <- year(mdy(as.character(songs$date)))
 head(songs)
@@ -67,8 +50,7 @@ require(data.table)
 d <- data.table(cnt_artists, key="year")
 d <- d[, head(.SD, 10), by=year]
 
-barchart(as.integer(count) ~ as.character(artist) | factor(year), data=d,
-           main="barchart",
-           scales=list(x=list(rot=90))
-           )
+plot_ly(arrange(d, artist), x=artist, y=count, type='bar', color=year) %>%
+  layout(showlegend=F)
 
+playlist <- select(read.csv('/home/ubuntu/WFMU_playlists/shiny/data/KF/nltk_playlist.tsv', sep='\t', header = T, stringsAsFactors = F), -ind)
