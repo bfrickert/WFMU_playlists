@@ -1,56 +1,72 @@
-require(plyr)
-library(lubridate)
-library(lattice)
 library(dplyr)
-library(ggplot2)
-library(plotly)
-songs <- read.csv('data/shiny/IC/songs.tsv', sep='\t')
-songs$artist <- tolower(songs$artist)
-songs$song <- tolower(songs$song)
 
-thes <- songs[grepl('^the ', tolower(songs$artist)),]
-#remove 'the '
-#the_songs <- songs[thes,]
-stones2 <- songs[grepl('^the ', tolower(songs$artist)),]
+clean.songs <- function(x){
+  
+  return(within(x, artist <- 
+                  ifelse(grepl('^the ', tolower(x$artist)), 
+                         substr(x$artist, 5, nchar(x$artist)), 
+                         x$artist)))
+  
+  
+}
 
-songs <- within(songs, artist <- 
-                  ifelse(grepl('^the ', tolower(songs$artist)), 
-                         substr(songs$artist, 5, nchar(songs$artist)), 
-                         songs$artist))
+getSongs <- function(name){
+  songs <- read.csv(paste('data/', name, '/songs.tsv',sep=''), sep='\t')
+  songs$artist <- tolower(songs$artist)
+  songs$song <- tolower(songs$song)
+  
+  songs <- filter(songs, artist != 'fail')
+  return(clean.songs(songs))
+}
 
-cnts_unqsongs <- ddply(songs,'artist',
-              summarise,
-              count = length(unique(song)))
 
-cnts_unqsongs <- cnts_unqsongs[order(cnts_unqsongs$count, decreasing=TRUE),]
+unq_songs <- function(x){
+  cnts_unqsongs <- ddply(x,'artist',
+                         summarise,
+                         count = length(unique(song)))
+  cnts_unqsongs <- cnts_unqsongs[order(cnts_unqsongs$count, decreasing=TRUE),]
+  return(cnts_unqsongs)
+}
 
-songs$year <- format(mdy(songs$date), '%Y')
+cnt_artists <- function(x){
+  x$year <- year(mdy(as.character(x$date)))
+  songs.g <- group_by(select(x, artist, year), artist, year)
+  cnt_artists <- dplyr::summarize(songs.g, cnt=n())
+  names(cnt_artists) <- c("artist", "year","count")
+  cnt_artists <- cnt_artists[order(cnt_artists$count, decreasing=TRUE),]
+  
+  return(arrange(cnt_artists, artist))
+}
 
-songs.g <- group_by(select(songs, artist, year), artist, year)
-cnt_artists <- dplyr::summarize(songs.g, cnt=n())
-#cnt_artists <- ddply(select(songs, -date), .(songs$artist, songs$year, nrow))
-names(cnt_artists) <- c("artist", "year","count")
-cnt_artists <- cnt_artists[order(cnt_artists$count, decreasing=TRUE),]
-cnt_artists <- filter(cnt_artists, artist != 'fail')
-
-cnt_songs <- ddply(songs, .(songs$artist, songs$song), nrow)
-names(cnt_songs) <- c("artist", "song", "count")
-cnt_songs <- cnt_songs[order(cnt_songs$count, decreasing=TRUE),]
-
-c <- ggplot(head(filter(cnts_unqsongs, artist != 'fail'), n=10), 
-              aes(fill=artist, x=artist, y=count)) + 
-  geom_bar(stat = "identity") + coord_flip() + ggtitle("Most Unique Songs Played by These Artists") +
-  theme_bw()
-c
-
-songs$year <- year(mdy(as.character(songs$date)))
-head(songs)
+cnt_songs <- function(x){
+  
+  cnt_songs <- ddply(x, .(x$artist, x$song), nrow)
+  names(cnt_songs) <- c("artist", "song", "count")
+  cnt_songs <- cnt_songs[order(cnt_songs$count, decreasing=TRUE),]
+  return(cnt_songs)
+}
 
 require(data.table)
-d <- data.table(cnt_artists, key="year")
-d <- d[, head(.SD, 10), by=year]
+top.10.artists.year <- function(x){
+  d <- data.table(x, key="year")
+  d <- d[, head(.SD, 10), by=year]
+  return(d)
+}
 
-plot_ly(arrange(d, artist), x=artist, y=count, type='bar', color=year) %>%
-  layout(showlegend=F)
-
-playlist <- select(read.csv('/home/ubuntu/WFMU_playlists/shiny/data/KF/nltk_playlist.tsv', sep='\t', header = T, stringsAsFactors = F), -ind)
+names <- c('KF','LB', 'IC', 'BT', 'BY', 'ND')
+sapply(names, function(x){
+  songs <- getSongs(x)
+   write.table(unq_songs(songs), paste('shiny/data/', x, '/unq_songs.tsv', sep=''), 
+               sep='\t', row.names=F, quote=F)
+   write.table(cnt_artists(songs), paste('shiny/data/', x, '/cnt_artists.tsv', sep=''), 
+              sep='\t', row.names=F, quote=F)
+   write.table(cnt_songs(songs), paste('shiny/data/', x, '/cnt_songs.tsv', sep=''), 
+               sep='\t', row.names=F, quote=F)
+   c <- arrange(data.frame(cnt_artists(songs)), year, desc(count))
+   write.table(arrange(top.10.artists.year(arrange(data.frame(cnt_artists(songs)), year, desc(count))),artist), paste('shiny/data/', x, '/top.10.tsv', sep=''), 
+               sep='\t', row.names=F, quote=F)
+})
+# s <- read.csv(paste('data/', 'BT', '/top.10.tsv', sep=''), sep='\t', header = T, stringsAsFactors = F)
+# s
+# plot_ly(arrange(s, artist), x=artist, y=count, type='bar', color=factor(year)) %>%
+#   layout(showlegend=F)

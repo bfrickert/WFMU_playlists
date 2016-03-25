@@ -1,11 +1,13 @@
 library(shiny)
 library(plotly)
+library(ggplot2)
+source('helper.R')
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
   
   # Application title
-  titlePanel("Forecast Bike Trail Usage in Arlington, Va."),
+  titlePanel("WFMU DJ Dashboard"),
   
   # Sidebar with a slider input for the number of bins
   sidebarLayout(
@@ -13,10 +15,17 @@ shinyUI(fluidPage(
       selectInput("dj", "Choose a DJ:",
                    c("Ken Freedman"="KF",
                      "Liz Berg"="LB",
-                     "Irwin Chusid"="IC"
+                     "Irwin Chusid"="IC",
+                     "Marty McSorley" = "BY",
+                     "Brian Turner" = "BT",
+                     "Nickel & Dime" = "ND"
                      ))
     ),
     mainPanel(
+      
+     tableOutput('tabl'),
+     plotOutput('top'),
+     plotlyOutput('big.one')
       )
       )
     ))

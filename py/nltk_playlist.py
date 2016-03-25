@@ -7,7 +7,7 @@ import numpy as np
 import StringIO
 import sys
 
-df = pd.read_table("shiny/data/{0}/songs.tsv".format(sys.argv[1]), sep='\t')
+df = pd.read_table("data/{0}/songs.tsv".format(sys.argv[1]), sep='\t')
 
 songs = df['song'].dropna().values
 txt = ' '.join(songs.tolist())
