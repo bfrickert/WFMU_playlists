@@ -54,4 +54,4 @@ for url in urls:
         pass
 
 df.columns = ['artist','song','date']
-df.to_csv('shiny/data/{0}/songs.tsv'.format(sys.argv[1]), sep='\t')
+df.to_csv('data/{0}/songs.tsv'.format(sys.argv[1]), sep='\t')
