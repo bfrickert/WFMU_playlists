@@ -19,7 +19,12 @@ shinyUI(fluidPage(
                      "Brian Turner" = "BT",
                      "Nickel & Dime" = "ND",
                      "John Allen" = "JA",
-                     "Scott Williams" = "SW"
+                     "Scott Williams" = "SW",
+                     "My Castle of Quiet" = "WB",
+                     "Put the Needle on the Record" = "BJ",
+                     "Strength Through Failure" = "FR",
+                     "Bryce" = "BK",
+                     "Evan \"Funk\" Davies" = "ED"
                      ))
     ),
     mainPanel(
