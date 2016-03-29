@@ -1,13 +1,16 @@
+library(plyr)
 library(dplyr)
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(lubridate)
+args = commandArgs(trailingOnly=TRUE)
 
 clean.songs <- function(x){
-  
   return(within(x, artist <- 
                   ifelse(grepl('^the ', tolower(x$artist)), 
                          substr(x$artist, 5, nchar(x$artist)), 
                          x$artist)))
-  
-  
 }
 
 getSongs <- function(name){
@@ -18,7 +21,6 @@ getSongs <- function(name){
   songs <- filter(songs, artist != 'fail')
   return(clean.songs(songs))
 }
-
 
 unq_songs <- function(x){
   cnts_unqsongs <- ddply(x,'artist',
@@ -50,11 +52,28 @@ require(data.table)
 top.10.artists.year <- function(x){
   d <- data.table(x, key="year")
   d <- d[, head(.SD, 10), by=year]
+  d <- filter(d, count>2)
   return(d)
 }
 
-names <- c('KF','LB', 'IC', 'BT', 'BY', 'ND')
-sapply(names, function(x){
+word.cloud <- function(x) {
+  comments <- read.csv(paste('data/',x, '/comments.txt', sep=''), stringsAsFactors = F, sep='\t',fill=T)
+  corp <- Corpus(VectorSource(comments$X0))
+  corp <- tm_map(corp,content_transformer(function(x) iconv(x, to='UTF-8', sub='byte')),
+                     mc.cores=1)
+  corp <- tm_map(corp, content_transformer(removeNumbers), lazy=T)
+  corp <- tm_map(corp, content_transformer(tolower), lazy=T)
+  corp <- tm_map(corp, content_transformer(removePunctuation), lazy=T)
+  myStopwords <- c(stopwords('english'), "morning", "listening", "show", "marty")
+  corp <- tm_map(corp, content_transformer(removeWords), myStopwords)
+  corp <- tm_map(corp, content_transformer(stemDocument), lazy=T)
+  corp <- tm_map(corp, content_transformer(stripWhitespace), lazy=T)
+  jpeg(paste('shiny/viz/wordcloud/',x,'.jpg', sep=''))
+  wordcloud(corp, max.words = 100, random.order = FALSE)
+  dev.off()
+ }
+
+process.dj <- function(x){
   songs <- getSongs(x)
    write.table(unq_songs(songs), paste('shiny/data/', x, '/unq_songs.tsv', sep=''), 
                sep='\t', row.names=F, quote=F)
@@ -65,8 +84,7 @@ sapply(names, function(x){
    c <- arrange(data.frame(cnt_artists(songs)), year, desc(count))
    write.table(arrange(top.10.artists.year(arrange(data.frame(cnt_artists(songs)), year, desc(count))),artist), paste('shiny/data/', x, '/top.10.tsv', sep=''), 
                sep='\t', row.names=F, quote=F)
-})
-# s <- read.csv(paste('data/', 'BT', '/top.10.tsv', sep=''), sep='\t', header = T, stringsAsFactors = F)
-# s
-# plot_ly(arrange(s, artist), x=artist, y=count, type='bar', color=factor(year)) %>%
-#   layout(showlegend=F)
+   word.cloud(x)
+}
+
+process.dj(args[1])

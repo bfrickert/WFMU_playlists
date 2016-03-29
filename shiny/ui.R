@@ -1,7 +1,6 @@
 library(shiny)
 library(plotly)
 library(ggplot2)
-source('helper.R')
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -18,14 +17,18 @@ shinyUI(fluidPage(
                      "Irwin Chusid"="IC",
                      "Marty McSorley" = "BY",
                      "Brian Turner" = "BT",
-                     "Nickel & Dime" = "ND"
+                     "Nickel & Dime" = "ND",
+                     "John Allen" = "JA",
+                     "Scott Williams" = "SW"
                      ))
     ),
     mainPanel(
       
-     tableOutput('tabl'),
+     textOutput('var'),
      plotOutput('top'),
-     plotlyOutput('big.one')
-      )
+     plotlyOutput('big.one'),
+     br(),br(),
+     tableOutput('tabl')
+    )
       )
     ))

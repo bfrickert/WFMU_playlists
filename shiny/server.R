@@ -1,4 +1,3 @@
-source('helper.R')
 library(ggplot2)
 
 shinyServer(function(input, output) {
@@ -6,18 +5,28 @@ shinyServer(function(input, output) {
   getUnqSongs <- reactive({
     s <- read.csv(paste('data/', input$dj, '/unq_songs.tsv', sep=''), sep='\t', header = T, stringsAsFactors = F)
     s
-    })
+  })
   getNLTKplaylist <- reactive({
-    s <- read.csv(paste('data/', input$dj, '/nltk_playlist.tsv', sep=''), sep='\t', header = T, stringsAsFactors = F)
+    s <- select(read.csv(paste('data/', input$dj, '/nltk_playlist.tsv', sep=''), sep='\t', header = T, stringsAsFactors = F),
+                -X)
     s
   })
   getTop10byYear <- reactive({
     s <- read.csv(paste('data/', input$dj, '/top.10.tsv', sep=''), sep='\t', header = T, stringsAsFactors = F)
     s
   })
-
+  getArtistSongs <- reactive({
+    s <- read.csv(paste('data/', input$dj, '/cnt_artists.tsv', sep=''), sep='\t', header = T, stringsAsFactors = F)
+    s
+  })
+  
   output$tabl <- renderTable({
     getNLTKplaylist()
+  })
+  
+  output$var <- renderText({
+    s <- getArtistSongs()
+    var(s$count, na.rm=T)
   })
   
   output$top <- renderPlot({
@@ -29,7 +38,7 @@ shinyServer(function(input, output) {
   })
   output$big.one <- renderPlotly({
     plot_ly(arrange(getTop10byYear(), artist), x=artist, y=count, type='bar', color=factor(year)) %>%
-      layout(showlegend=F)
+      layout(showlegend=F, title='Top Ten Most Played Artists by Year')
   })
 })
 

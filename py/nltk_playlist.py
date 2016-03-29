@@ -24,9 +24,11 @@ a_tokens = nltk.word_tokenize(atxt)
 text = nltk.Text(tokens)
 atext = nltk.Text(a_tokens)
 
+playlist_len = int(np.mean(df.groupby('date').last().head()['Unnamed: 0']))
+
 foo = [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5]
 t_songs = []
-for i in range (0,39):
+for i in range (0,playlist_len):
     content_model = nltk.NgramModel(2,tokens)
     #print(content_model)
     starting_words = content_model.generate(100)[-2:]
@@ -36,7 +38,7 @@ for i in range (0,39):
 
 foo = [0,0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,2,3,3,3,]
 t_artists = []
-for i in range (0,39):
+for i in range (0,playlist_len):
     a_content_model = nltk.NgramModel(2, a_tokens)
     starting_words = a_content_model.generate(100)[-2:]
     a_content = a_content_model.generate(random.choice(foo), starting_words)
