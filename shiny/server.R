@@ -26,19 +26,26 @@ shinyServer(function(input, output) {
   
   output$var <- renderText({
     s <- getArtistSongs()
-    var(s$count, na.rm=T)
+    mean(s$count, na.rm=T)
   })
   
   output$top <- renderPlot({
     ggplot(head(getUnqSongs(), n=10), 
                 aes(fill=artist, x=artist, y=count)) + 
       geom_bar(stat = "identity") + coord_flip() + ggtitle("Most Unique Songs Played by These Artists") +
-      theme_bw()
+      theme_bw() + theme(legend.position="none")
     
   })
   output$big.one <- renderPlotly({
+    ax <- list(
+      title = "artists",
+      zeroline = FALSE,
+      showline = FALSE,
+      showticklabels = FALSE,
+      showgrid = FALSE
+    )
     plot_ly(arrange(getTop10byYear(), artist), x=artist, y=count, type='bar', color=factor(year)) %>%
-      layout(showlegend=F, title='Top Ten Most Played Artists by Year')
+      layout(showlegend=F, xaxis=ax, title='Top Ten Most Played Artists by Year')
   })
 })
 
