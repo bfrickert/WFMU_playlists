@@ -1,4 +1,5 @@
 library(ggplot2)
+library(dplyr)
 
 shinyServer(function(input, output) {
   
@@ -32,7 +33,7 @@ shinyServer(function(input, output) {
   output$top <- renderPlot({
     ggplot(head(getUnqSongs(), n=10), 
                 aes(fill=artist, x=artist, y=count)) + 
-      geom_bar(stat = "identity") + coord_flip() + ggtitle("Most Unique Songs Played by These Artists") +
+      geom_bar(stat = "identity") + coord_flip() + ggtitle("DJ has Played the Most Unique Songs by these Artists") +
       theme_bw() + theme(legend.position="none")
     
   })
@@ -45,7 +46,12 @@ shinyServer(function(input, output) {
       showgrid = FALSE
     )
     plot_ly(arrange(getTop10byYear(), artist), x=artist, y=count, type='bar', color=factor(year)) %>%
-      layout(showlegend=F, xaxis=ax, title='Top Ten Most Played Artists by Year')
+      layout(showlegend=F, xaxis=ax, title='')
   })
+  output$word.cloud <- renderImage({
+    list(src = paste('./viz/wordcloud/',input$dj,'.jpg',sep=''),
+         alt = "Word Cloud")
+    
+  }, deleteFile = FALSE)
 })
 

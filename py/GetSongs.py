@@ -37,6 +37,7 @@ def scrapeWFMUPlaylist(url, border_width=1):
                 song = cells[1].find("font").find(text=True).strip().encode('ascii', 'ignore')
                 artist = cells[0].find("font").find(text=True).strip().encode('ascii', 'ignore')
             except:
+                pass
                 song = 'FAIL'
                 artist = 'FAIL'
             values.append([artist, song, fdt])
