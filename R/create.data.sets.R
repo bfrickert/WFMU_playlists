@@ -1,10 +1,12 @@
-library(plyr)
-library(dplyr)
-library(tm)
-library(SnowballC)
-library(wordcloud)
-library(lubridate)
+suppressMessages(library(plyr))
+suppressMessages(library(dplyr))
+suppressMessages(library(tm))
+suppressMessages(library(SnowballC))
+suppressMessages(library(wordcloud))
+suppressMessages(library(lubridate))
+
 args = commandArgs(trailingOnly=TRUE)
+print("Creating data sets........")
 
 clean.songs <- function(x){
   return(within(x, artist <- 
@@ -48,7 +50,7 @@ cnt_songs <- function(x){
   return(cnt_songs)
 }
 
-require(data.table)
+suppressMessages(require(data.table))
 top.10.artists.year <- function(x){
   d <- data.table(x, key="year")
   d <- d[, head(.SD, 10), by=year]
@@ -57,6 +59,7 @@ top.10.artists.year <- function(x){
 }
 
 word.cloud <- function(x) {
+  stop.words.df <- read.csv('data/stop.words.tsv', sep='\t',stringsAsFactors = F)
   comments <- read.csv(paste('data/',x, '/comments.txt', sep=''), stringsAsFactors = F, sep='\t',fill=T)
   corp <- Corpus(VectorSource(comments$X0))
   corp <- tm_map(corp,content_transformer(function(x) iconv(x, to='UTF-8', sub='byte')),
@@ -64,13 +67,17 @@ word.cloud <- function(x) {
   corp <- tm_map(corp, content_transformer(removeNumbers), lazy=T)
   corp <- tm_map(corp, content_transformer(tolower), lazy=T)
   corp <- tm_map(corp, content_transformer(removePunctuation), lazy=T)
-  myStopwords <- c(stopwords('english'), "morning", "listening", "show", "marty")
+  myStopwords <- c(stopwords('english'), "morning", "listening", "show", "album", "wfmu", "listeners",
+                   "music", "radio", "hear", "playing", "listen", "sounds", "track", "sound", "record",
+                   "also", "ive", "ill", "get", "youre", "everyone", "something", "play", "even",
+                   "band", "playlist", stop.words.df$stop.word)
   corp <- tm_map(corp, content_transformer(removeWords), myStopwords)
   corp <- tm_map(corp, content_transformer(stemDocument), lazy=T)
   corp <- tm_map(corp, content_transformer(stripWhitespace), lazy=T)
+  pal2 <- brewer.pal(8,"Set1")
   jpeg(paste('shiny/viz/wordcloud/',x,'.jpg', sep=''))
-  wordcloud(corp, max.words = 100, random.order = FALSE)
-  dev.off()
+  wordcloud(corp, max.words = 100, random.order = FALSE, colors=pal2)
+  suppressMessages(dev.off())
  }
 
 process.dj <- function(x){
