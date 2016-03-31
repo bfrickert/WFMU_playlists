@@ -54,7 +54,7 @@ down by year. Hover over the graph to see artist names and counts."),
      plotlyOutput('big.one'),
      br(),br(),
      HTML("<h4><strong>A Representative Playlist</strong></h4>"),
-     HTML("<h5>Using natural language processing, a <i>representative<?i> playlist was created.</h5>"),
+     HTML("<h5>Using natural language processing, a <i>representative</i> playlist was created.</h5>"),
      tableOutput('tabl'),
      HTML("<h4><strong>Comments Section Word Cloud</strong></h4>"),
      HTML("<h5>The following word cloud is <i>WFMU-adjusted</i>. That means words common
