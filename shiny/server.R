@@ -33,7 +33,7 @@ shinyServer(function(input, output) {
   output$top <- renderPlot({
     ggplot(head(getUnqSongs(), n=10), 
                 aes(fill=artist, x=artist, y=count)) + 
-      geom_bar(stat = "identity") + coord_flip() + ggtitle("DJ has Played the Most Unique Songs by these Artists") +
+      geom_bar(stat = "identity") + coord_flip() + ggtitle("This DJ has Played the Most Unique Songs by these Artists") +
       theme_bw() + theme(legend.position="none")
     
   })

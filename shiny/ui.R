@@ -28,7 +28,6 @@ shinyUI(fluidPage(
                      "Ken Freedman"="KF",
                      "Liz Berg"="LB",
                      "Marty McSorley" = "BY",
-                     "Michael Shelley" = "SH",
                      "My Castle of Quiet" = "WB",
                      "Nickel & Dime" = "ND",
                      "Put the Needle on the Record" = "BJ",
