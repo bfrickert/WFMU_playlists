@@ -35,12 +35,13 @@ def scrapeWFMUPlaylist(url, border_width=1):
         if len(cells) >= 4:
             try:
                 song = cells[1].find("font").find(text=True).strip().encode('ascii', 'ignore')
-                artist = cells[0].find("font").find(text=True).strip().encode('ascii', 'ignore')
+		artist = cells[0].find("font").find(text=True).strip().encode('ascii', 'ignore')
             except:
                 pass
                 song = 'FAIL'
                 artist = 'FAIL'
-            values.append([artist, song, fdt])
+            if 'Music behind DJ:' not in song:
+                values.append([artist, song, fdt])
 
     df = pd.DataFrame(values)
     return df
