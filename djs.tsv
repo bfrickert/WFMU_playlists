@@ -1,30 +1,31 @@
-dj	border.width
-AE	1
-BT	1
-BK	0
-CL	1
-DF	1
-DK	1
-DH	1
-ED	1
-GF	1
-ID	1
-IS	1
-IT	1
-IC	1
-JA	1
-KF	1
-LB	1
-BY	1
-WB	1
-ND	1
-BJ	1
-SW	1
-SP	1
-FR	0
-SN	1
-TQ	1
-LM	1
-TA	1
-TC	1
-DM	1
+dj	border.width	name
+AE	1	Airborne Event
+BT	1	Brian Turner
+BK	0	Bryce
+CL	1	Busy Doing Nothing
+DF	1	Dangerous for the Brain
+DK	1	Diane's Kamikaze Fun Machine
+DH	1	Duane Train
+ED	1	Evan "Funk" Davies
+GF	1	Gaylord Fields
+ID	1	Imaginary Radio
+IS	1	Inflatable Squirrel Carcass
+IT	1	Irene Trudel
+IC	1	Irwin Chusid
+JA	1	John Allen
+KF	1	Ken Freedman
+LB	1	Liz Berg
+BY	1	Marty McSorley
+WB	1	My Castle of Quiet
+ND	1	Nickel & Dime Radio
+BJ	1	Put the Needle on the Record
+SW	1	Scott Williams
+SP	1	Shrunken Planet
+FR	0	Strength Through Failure
+SN	1	Surface Noise
+TQ	1	Therese
+LM	1	This Modern World
+TA	1	Todd-o-phonic Todd
+TC	1	Tony Coulter
+DM	1	World of Echo
+
