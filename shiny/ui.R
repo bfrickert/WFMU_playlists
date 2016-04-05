@@ -1,3 +1,4 @@
+library(xtable)
 library(shiny)
 library(plotly)
 library(ggplot2)
@@ -16,6 +17,7 @@ shinyUI(fluidPage(
                      "Brian Turner" = "BT",
                      "Bryce" = "BK",
                      "Charlie Lewis" = "CL",
+                     "Dangerous for the Brain" = "DF",
                      "Diane's Kamikaze Fun Machine" = "DK",
                      "Duane Train" = "DH",
                      "Evan \"Funk\" Davies" = "ED",
