@@ -1,5 +1,5 @@
 library(dplyr)
-df <- read.csv('djs.tsv',sep='\t', stringsAsFactors = F)
+df <- read.csv('shiny/djs.tsv',sep='\t', stringsAsFactors = F)
 
 apply(df,1,function(x){
   if(dir.exists(paste('data/', x['dj'], sep='')) == F){

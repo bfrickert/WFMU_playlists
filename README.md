@@ -6,9 +6,9 @@ Run `sudo pip install -r requirements.txt` to get all the python libraries neces
 
 
 ###Steps
-The DJ's are compiled in a tab-delimited file (`shiny/djs.tsv`). Run `Rscript R/automation.R` to scrape DJ information and compile aggregations and visualizations.
+The DJ's are listed in a tab-delimited file (`shiny/djs.tsv`). Run `Rscript R/automation.R` to scrape DJ information and compile aggregations and visualizations for all those DJ's.
 
-If you need to re-scrape a DJ's data, just find that DJ's two letter code and run `rm -r data/{code}` and `rm -r shiny/data/{code}`. That removes that DJ's data. Then re-run `Rscript R/automation.R` again. This will only process those dj's who do not have data in the data directories.
+If you ever need to re-scrape a DJ's data, just find that DJ's two letter code and run `rm -r data/{code}` and `rm -r shiny/data/{code}`. That removes that DJ's data. Then re-run `Rscript R/automation.R` again. This will only process those DJ's who do not have data in the data directories.
 
 The `shiny/` directory also contains a Shiny R app that can be hosted. Learn more about [Shiny](http://shiny.rstudio.com/).
 
