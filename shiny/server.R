@@ -10,8 +10,8 @@ shinyServer(function(input, output) {
   getNLTKplaylist <- reactive({
     s <- select(read.csv(paste('data/', input$dj, '/nltk_playlist.tsv', sep=''), sep='\t', header = T, stringsAsFactors = F),
                 -X)
-    s$artist <- gsub('\(','',gsub('\)','',s$artist))
-    s$song <- gsub('\(','',gsub('\)','',s$song))
+    s$artist <- gsub('\\(','',gsub('\\)','',s$artist))
+    s$song <- gsub('\\(','',gsub('\\)','',s$song))
     s
   })
   getTop10byYear <- reactive({

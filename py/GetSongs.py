@@ -34,14 +34,18 @@ def scrapeWFMUPlaylist(url, border_width=1):
 
         if len(cells) >= 4:
             try:
-                song = cells[1].find("font").find(text=True).strip().encode('ascii', 'ignore')
-		artist = cells[0].find("font").find(text=True).strip().encode('ascii', 'ignore')
+                if len(cells[0].findAll(text=re.compile('Music behind DJ:'))) == 1:
+                    song = 'FAIL'
+                    artist = 'FAIL'
+                    
+                else:
+                    song = cells[1].find("font").find(text=True).strip().encode('ascii', 'ignore')
+		    artist = cells[0].find("font").find(text=True).strip().encode('ascii', 'ignore')
             except:
                 pass
                 song = 'FAIL'
                 artist = 'FAIL'
-            if 'Music behind DJ:' not in song:
-                values.append([artist, song, fdt])
+            values.append([artist, song, fdt])
 
     df = pd.DataFrame(values)
     return df
@@ -61,4 +65,5 @@ for url in urls:
         pass
 
 df.columns = ['artist','song','date']
+df = df[df.artist != 'FAIL']
 df.to_csv('data/{0}/songs.tsv'.format(sys.argv[1]), sep='\t')
