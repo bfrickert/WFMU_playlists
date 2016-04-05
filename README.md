@@ -6,6 +6,9 @@ Run `sudo pip install -r requirements.txt` to get all the python libraries neces
 
 For each DJ, find his or her initials from his or her playlist page. Then click on a playlist to see if her or she uses borders for the table that displays the songs within his or her playlists (1 for yes, 0 for no). Then run the following:
 
-1. `mkdir data\{initials}`
-2. `mkdir shiny\data\{initials}`
+1. `mkdir data/{initials}`
+2. `mkdir shiny/data/{initials}`
 3. `./process_dj.sh {initials} {border_width}`
+
+The `shiny/` directory contains a Shiny R app that can be hosted. Learn more about [Shiny](http://shiny.rstudio.com/).
+
