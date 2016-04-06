@@ -4,11 +4,11 @@ If you've ever wanted to create a WFMU playlist, this may just be the project fo
 ###Requirements
 Run `sudo pip install -r requirements.txt` to get all the python libraries necessary to run the scripts below.
 
-For each DJ, find his or her initials from his or her playlist page. Then click on a playlist to see if her or she uses borders for the table that displays the songs within his or her playlists (1 for yes, 0 for no). Then run the following:
 
-1. `mkdir data/{initials}`
-2. `mkdir shiny/data/{initials}`
-3. `./process_dj.sh {initials} {border_width}`
+###Steps
+The DJ's are listed in a tab-delimited file (`shiny/djs.tsv`). Run `Rscript R/automation.R` to scrape DJ information and compile aggregations and visualizations for all those DJ's.
 
-The `shiny/` directory contains a Shiny R app that can be hosted. Learn more about [Shiny](http://shiny.rstudio.com/).
+If you ever need to re-scrape a DJ's data, just find that DJ's two letter code and run `rm -r data/{code}` and `rm -r shiny/data/{code}`. That removes that DJ's data. Then re-run `Rscript R/automation.R` again. This will only process those DJ's who do not have data in the data directories.
+
+The `shiny/` directory also contains a Shiny R app that can be hosted. Learn more about [Shiny](http://shiny.rstudio.com/).
 

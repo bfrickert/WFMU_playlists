@@ -20,7 +20,7 @@ getSongs <- function(name){
   songs$artist <- tolower(songs$artist)
   songs$song <- tolower(songs$song)
   
-  songs <- filter(songs, artist != 'fail')
+  songs <- filter(songs, artist != 'fail' & artist != "(your dj speaks)")
   return(clean.songs(songs))
 }
 

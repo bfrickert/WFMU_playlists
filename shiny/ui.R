@@ -1,6 +1,7 @@
 library(shiny)
 library(plotly)
 library(ggplot2)
+source('helper.R')
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -11,36 +12,7 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for the number of bins
   sidebarLayout(
     sidebarPanel(
-      selectInput("dj", "Choose a DJ:",
-                   c("Airborne Event" = "AE",
-                     "Brian Turner" = "BT",
-                     "Bryce" = "BK",
-                     "Charlie Lewis" = "CL",
-                     "Diane's Kamikaze Fun Machine" = "DK",
-                     "Duane Train" = "DH",
-                     "Evan \"Funk\" Davies" = "ED",
-                     "Gaylord Fields" = "GF",
-                     "Imaginary Radio" = "ID",
-                     "Inflatable Squirrel Carcass" = "IS",
-                     "Irene Trudel" = "IT",
-                     "Irwin Chusid"="IC",
-                     "John Allen" = "JA",
-                     "Ken Freedman"="KF",
-                     "Liz Berg"="LB",
-                     "Marty McSorley" = "BY",
-                     "My Castle of Quiet" = "WB",
-                     "Nickel & Dime" = "ND",
-                     "Put the Needle on the Record" = "BJ",
-                     "Scott Williams" = "SW",
-                     "Shrunken Planet" = "SP",
-                     "Strength Through Failure" = "FR",
-                     "Surface Noise" = "SN",
-                     "Therese" = "TQ",
-                     "This is the Modern World" = "LM",
-                     "Todd-a-phonic Todd" = "TA",
-                     "Tony Coulter" = "TC",
-                     "World of Echo" = "DM"
-                     ), selected='Ken Freedman')
+      selectInput("dj", "Choose a DJ:", choices, selected="Ken Freedman")
     ),
     mainPanel(
       HTML("<h4>Welcome to the <strong>WFMU DJ Dashboard</strong>!
