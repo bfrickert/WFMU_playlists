@@ -1,3 +1,4 @@
 #Ignore Everything but this file
 *
 !.gitignore
+!stop.words.tsv
