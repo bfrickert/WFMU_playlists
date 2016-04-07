@@ -4,6 +4,7 @@ suppressMessages(library(tm))
 suppressMessages(library(SnowballC))
 suppressMessages(library(wordcloud))
 suppressMessages(library(lubridate))
+library(plyr)
 
 args = commandArgs(trailingOnly=TRUE)
 print("Creating data sets........")
@@ -61,7 +62,17 @@ top.10.artists.year <- function(x){
 word.cloud <- function(x) {
   stop.words.df <- read.csv('data/stop.words.tsv', sep='\t',stringsAsFactors = F)
   comments <- read.csv(paste('data/',x, '/comments.txt', sep=''), stringsAsFactors = F, sep='\t',fill=T)
-  corp <- Corpus(VectorSource(comments$X0))
+  names(comments) <- c('idx','comment')
+  comments <- select(comments, -idx)
+  new.comments <- ldply(apply(comments, 1, function(x){
+    c <- gsub('-', '', x[1])
+    c <- gsub('@[A-Za-z_0-9 ]+:', '', c)
+    c <- gsub('@[A-Za-z_0-9;,]+', '', c)
+    
+  }))
+  
+  names(new.comments) <- 'comment'
+  corp <- Corpus(VectorSource(new.comments$comment))
   corp <- tm_map(corp,content_transformer(function(x) iconv(x, to='UTF-8', sub='byte')),
                      mc.cores=1)
   corp <- tm_map(corp, content_transformer(removeNumbers), lazy=T)
@@ -70,10 +81,22 @@ word.cloud <- function(x) {
   myStopwords <- c(stopwords('english'), "morning", "listening", "show", "album", "wfmu", "listeners",
                    "music", "radio", "hear", "playing", "listen", "sounds", "track", "sound", "record",
                    "also", "ive", "ill", "get", "youre", "everyone", "something", "play", "even",
-                   "band", "playlist", stop.words.df$stop.word)
+                   "band", "playlist", 'debbie',"blumin", "bethany", "daniel", "jeff", "jeffs", "frow", "becky", 
+                   "bombay","devon", "kurt", "bosh", "jonathan", "faye", "iren", "irene", "duane", "jeffrey", 
+                   "gaylord", "irwin", "todd", "efd", "evan", "liz", "ken", "trouble", "kens", "pat",
+                   "dan", "carmichael", "larry", "likes", "breaking", "kenny", "kenneth", "fofo",
+                   "parq", "download", "freedman", "annie", "account", "laptop", "screen", "reed",
+                   "manager", "blog", "sam", "app", "mac", "calling", "comma", "suggest", "signal",
+                   "iphone", "browser", "land", "requests", "doug", "september", stop.words.df$stop.word)
   corp <- tm_map(corp, content_transformer(removeWords), myStopwords)
   corp <- tm_map(corp, content_transformer(stemDocument), lazy=T)
   corp <- tm_map(corp, content_transformer(stripWhitespace), lazy=T)
+
+#    dtm <- DocumentTermMatrix(corp)
+#    marty.freq <- findFreqTerms(dtm, 3, Inf)
+#    stop.words <- intersect(liz.freq,marty.freq)
+#    write.table(data.frame(stop.word=stop.words), 'data/stop.words.tsv', sep='\t', row.names=F, quote=F)  
+  
   pal2 <- brewer.pal(8,"Set1")
   jpeg(paste('shiny/viz/wordcloud/',x,'.jpg', sep=''))
   wordcloud(corp, max.words = 100, random.order = FALSE, colors=pal2)

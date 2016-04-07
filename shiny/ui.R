@@ -3,13 +3,11 @@ library(plotly)
 library(ggplot2)
 source('helper.R')
 
-# Define UI for application that draws a histogram
 shinyUI(fluidPage(
   
   # Application title
   titlePanel("WFMU DJ Dashboard"),
   
-  # Sidebar with a slider input for the number of bins
   sidebarLayout(
     sidebarPanel(
       selectInput("dj", "Choose a DJ:", choices, selected="Ken Freedman")
