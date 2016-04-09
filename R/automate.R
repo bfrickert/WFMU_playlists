@@ -6,7 +6,7 @@ apply(df,1,function(x){
     print(x['dj'])
     dir.create(paste('data/', x['dj'], sep=''))
     dir.create(paste('shiny/data/', x['dj'], sep=''))
-    cmd.run <- paste('/home/ubuntu/WFMU_playlists/process_dj.sh', x['dj'], x['border.width'], sep=' ')
+    cmd.run <- paste('process_dj.sh', x['dj'], x['border.width'], sep=' ')
     system(cmd.run)
   }
   })

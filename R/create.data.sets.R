@@ -60,6 +60,7 @@ top.10.artists.year <- function(x){
 }
 
 word.cloud <- function(x) {
+  print(x)
   stop.words.df <- read.csv('data/stop.words.tsv', sep='\t',stringsAsFactors = F)
   comments <- read.csv(paste('data/',x, '/comments.txt', sep=''), stringsAsFactors = F, sep='\t',fill=T)
   names(comments) <- c('idx','comment')
@@ -99,7 +100,7 @@ word.cloud <- function(x) {
   
   pal2 <- brewer.pal(8,"Set1")
   jpeg(paste('shiny/viz/wordcloud/',x,'.jpg', sep=''))
-  wordcloud(corp, max.words = 100, random.order = FALSE, colors=pal2)
+  wordcloud(corp,scale=c(4,1.5), max.words = 100, random.order = FALSE, colors=pal2)
   suppressMessages(dev.off())
  }
 
