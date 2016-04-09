@@ -41,15 +41,15 @@ shinyServer(function(input, output) {
     
   })
   output$big.one <- renderPlotly({
-    ax <- list(
-      title = "artists",
-      zeroline = FALSE,
-      showline = FALSE,
-      showticklabels = FALSE,
-      showgrid = FALSE
-    )
-    plot_ly(arrange(getTop10byYear(), artist), x=artist, y=count, type='bar', color=factor(year)) %>%
-      layout(showlegend=F, xaxis=ax, title='')
+        ax <- list(
+        title = "artists",
+        zeroline = FALSE,
+        showline = FALSE,
+        showticklabels = FALSE,
+        showgrid = FALSE
+        )
+      plot_ly(arrange(getTop10byYear(), artist), x=artist, y=count, type='bar', color=factor(year)) %>%
+        layout(showlegend=F, xaxis=ax, title='')
   })
   output$word.cloud <- renderImage({
     list(src = paste('./viz/wordcloud/',input$dj,'.jpg',sep=''),
