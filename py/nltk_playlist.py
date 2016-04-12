@@ -24,7 +24,7 @@ a_tokens = nltk.word_tokenize(atxt)
 text = nltk.Text(tokens)
 atext = nltk.Text(a_tokens)
 
-playlist_len = int(np.mean(df.groupby('date').last().head()['Unnamed: 0']))
+playlist_len = int(np.mean(df.groupby('date').last()['Unnamed: 0'])) + 1
 
 foo = [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5]
 t_songs = []

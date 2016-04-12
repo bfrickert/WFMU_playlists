@@ -25,27 +25,43 @@ def scrapeWFMUPlaylist(url, border_width=1):
             dt_struct = datetime.datetime.strptime(mdt.group(1), '%B %d, %Y')
             fdt = dt_struct.strftime('%m/%d/%Y')
         except:
-            dt = soup.findAll(text=re.compile('([a-zA-Z] [0-9]+, 20[0-1][0-9])'))
-            mdt = re.match('(.*)', dt[2].replace('\n',' ').strip(), re.M|re.I)
-            dt_struct = datetime.datetime.strptime(mdt.group(1), '%B %d, %Y')
-            fdt = dt_struct.strftime('%m/%d/%Y')
+            try:
+                dt = soup.findAll(text=re.compile('([a-zA-Z] [0-9]+, 20[0-1][0-9])'))
+                mdt = re.match('(.*)', dt[2].replace('\n',' ').strip(), re.M|re.I)
+                dt_struct = datetime.datetime.strptime(mdt.group(1), '%B %d, %Y')
+                fdt = dt_struct.strftime('%m/%d/%Y')
+            except:
+                dt = soup.findAll(text=re.compile('([a-zA-Z] [0-9]+, 20[0-1][0-9])'))
+                mdt = re.match('(.*)', dt[1].replace('\n',' ').strip(), re.M|re.I)
+                dt_struct = datetime.datetime.strptime(mdt.group(1), '%B %d, %Y')
+                fdt = dt_struct.strftime('%m/%d/%Y')                
     for row in rows:
         cells = row.findAll('td')
 
-        if len(cells) >= 4:
+        if len(cells) >= 2:
             try:
                 if len(cells[0].findAll(text=re.compile('Music behind DJ:'))) == 1:
                     song = 'FAIL'
                     artist = 'FAIL'
                     
                 else:
-                    song = cells[1].find("font").find(text=True).strip().encode('ascii', 'ignore')
-		    artist = cells[0].find("font").find(text=True).strip().encode('ascii', 'ignore')
+                    try:
+                        song = cells[1].find("font").find(text=True).strip().encode('ascii', 'ignore')
+                        artist = cells[0].find("font").find(text=True).strip().encode('ascii', 'ignore')
+                    except:
+                        song = cells[1].find(text=True).strip().encode('ascii','ignore')
+                        if cells[0].find(text=True).strip().encode('ascii','ignore') =='':
+                            artist = cells[0].find('b').find(text=True).strip().encode('ascii', 'ignore')
+                        else:
+                            artist = cells[0].find(text=True).strip().encode('ascii', 'ignore')
+
             except:
                 pass
                 song = 'FAIL'
                 artist = 'FAIL'
+    
             values.append([artist, song, fdt])
+
 
     df = pd.DataFrame(values)
     return df
@@ -66,4 +82,5 @@ for url in urls:
 
 df.columns = ['artist','song','date']
 df = df[df.artist != 'FAIL']
+df = df[df.artist != 'Artist']
 df.to_csv('data/{0}/songs.tsv'.format(sys.argv[1]), sep='\t')
