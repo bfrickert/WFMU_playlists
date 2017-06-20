@@ -6,7 +6,8 @@ apply(df,1,function(x){
     print(x['dj'])
     dir.create(paste('data/', x['dj'], sep=''))
     dir.create(paste('shiny/data/', x['dj'], sep=''))
-    cmd.run <- paste('process_dj.sh', x['dj'], x['border.width'], sep=' ')
-    system(cmd.run)
   }
+    cmd.run <- paste('sh process_dj.sh', x['dj'], x['border.width'], sep=' ')
+    print(cmd.run)
+    system(cmd.run)
   })

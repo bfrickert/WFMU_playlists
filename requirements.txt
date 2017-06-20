@@ -1,5 +1,9 @@
 beautifulsoup4==4.2.1
-pandas==0.13.1
-nltk==2.0.4
-numpy==1.10.4
-
+nltk==2.0.5
+numpy==1.11.3
+pandas==0.19.2
+python-dateutil==2.6.0
+pytz==2016.10
+PyYAML==3.12
+requests==2.12.4
+six==1.10.0

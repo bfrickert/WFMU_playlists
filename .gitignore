@@ -14,3 +14,8 @@ vignettes/*.pdf
 
 # jupyter notebooks
 *ipynb*
+
+# virtualenv
+venv/
+
+.idea/
