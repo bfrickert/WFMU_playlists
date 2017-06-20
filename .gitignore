@@ -18,3 +18,4 @@ vignettes/*.pdf
 # virtualenv
 venv/
 
+.idea/
