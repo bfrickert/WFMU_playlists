@@ -6,7 +6,7 @@ import time
 import datetime
 import sys
 
-def scrapeWFMUPlaylist(url, border_width=1):
+def scrapeWFMUPlaylist(url, dj, border_width=1):
     response = requests.get(url)
 
     soup = BeautifulSoup(response.text)
@@ -39,12 +39,17 @@ def scrapeWFMUPlaylist(url, border_width=1):
         cells = row.findAll('td')
 
         if len(cells) >= 2:
+            print(cells[0])
             try:
                 if len(cells[0].findAll(text=re.compile('Music behind DJ:'))) == 1:
                     song = 'FAIL'
                     artist = 'FAIL'
                     
                 else:
+                    if dj == 'FX':
+
+                        song = cells[0].find(text=True).strip().encode('ascii', 'ignore')
+                        print("song %s" % song)
                     try:
                         song = cells[1].find("font").find(text=True).strip().encode('ascii', 'ignore')
                         artist = cells[0].find("font").find(text=True).strip().encode('ascii', 'ignore')
@@ -54,6 +59,7 @@ def scrapeWFMUPlaylist(url, border_width=1):
                             artist = cells[0].find('b').find(text=True).strip().encode('ascii', 'ignore')
                         else:
                             artist = cells[0].find(text=True).strip().encode('ascii', 'ignore')
+
 
             except:
                 pass
@@ -72,11 +78,11 @@ url_df = pd.read_csv('data/{0}/playlists.tsv'.format(sys.argv[1]), sep='\t')
 urls = [row[1] for index, row in url_df.iterrows()]
 i = 0
 b_width = sys.argv[2]
-for url in urls:
+for url in urls[:5]:
     try:
         i += 1
         print str(i) + url
-        df = df.append(scrapeWFMUPlaylist(url,b_width))
+        df = df.append(scrapeWFMUPlaylist(url, sys.argv[1], b_width))
     except:
         pass
 
@@ -84,3 +90,6 @@ df.columns = ['artist','song','date']
 df = df[df.artist != 'FAIL']
 df = df[df.artist != 'Artist']
 df.to_csv('data/{0}/songs.tsv'.format(sys.argv[1]), sep='\t')
+
+if __name__ == '__main__':
+    pass

@@ -21,7 +21,7 @@ def scrapeKenPlaylists(i, initials):
 
 df = pd.DataFrame()
 
-for n in range(2001,2016):
+for n in range(2001,2017):
     df = df.append(scrapeKenPlaylists(n, sys.argv[1]))
 
 df = df.append(scrapeKenPlaylists('',sys.argv[1]))
