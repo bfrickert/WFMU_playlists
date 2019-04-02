@@ -19,3 +19,6 @@ vignettes/*.pdf
 venv/
 
 .idea/
+
+# conda env
+wfmu/

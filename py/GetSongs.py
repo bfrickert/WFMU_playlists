@@ -26,25 +26,32 @@ def scrapeWFMUPlaylist(url, dj, border_width=1):
             fdt = dt_struct.strftime('%m/%d/%Y')
         except:
             try:
-                dt = soup.findAll(text=re.compile('([a-zA-Z] [0-9]+, 20[0-1][0-9])'))
-                mdt = re.match('(.*)', dt[2].replace('\n',' ').strip(), re.M|re.I)
+                dt = soup.findAll(text=re.compile('([a-zA-Z] [0-9]+, 20[0-1][0-9]):'))
+                mdt = re.match('(.*):.*:', dt[0].strip(), re.M|re.I)
+                print mdt.group(1)
                 dt_struct = datetime.datetime.strptime(mdt.group(1), '%B %d, %Y')
                 fdt = dt_struct.strftime('%m/%d/%Y')
             except:
-                dt = soup.findAll(text=re.compile('([a-zA-Z] [0-9]+, 20[0-1][0-9])'))
-                mdt = re.match('(.*)', dt[1].replace('\n',' ').strip(), re.M|re.I)
-                dt_struct = datetime.datetime.strptime(mdt.group(1), '%B %d, %Y')
-                fdt = dt_struct.strftime('%m/%d/%Y')                
+                try:
+                    dt = soup.findAll(text=re.compile('([a-zA-Z] [0-9]+, 20[0-1][0-9])'))
+                    mdt = re.match('(.*)', dt[2].replace('\n',' ').strip(), re.M|re.I)
+                    dt_struct = datetime.datetime.strptime(mdt.group(1), '%B %d, %Y')
+                    fdt = dt_struct.strftime('%m/%d/%Y')
+                except:
+                    dt = soup.findAll(text=re.compile('([a-zA-Z] [0-9]+, 20[0-1][0-9])'))
+                    mdt = re.match('(.*)', dt[1].replace('\n',' ').strip(), re.M|re.I)
+                    dt_struct = datetime.datetime.strptime(mdt.group(1), '%B %d, %Y')
+                    fdt = dt_struct.strftime('%m/%d/%Y')
     for row in rows:
         cells = row.findAll('td')
 
         if len(cells) >= 2:
-            print(cells[0])
+            # print(cells[0])
             try:
                 if len(cells[0].findAll(text=re.compile('Music behind DJ:'))) == 1:
                     song = 'FAIL'
                     artist = 'FAIL'
-                    
+
                 else:
                     if dj == 'FX':
 
@@ -61,11 +68,12 @@ def scrapeWFMUPlaylist(url, dj, border_width=1):
                             artist = cells[0].find(text=True).strip().encode('ascii', 'ignore')
 
 
-            except:
+            except Exception, e:
+                print('Failed to upload to ftp: '+ str(e))
                 pass
                 song = 'FAIL'
                 artist = 'FAIL'
-    
+
             values.append([artist, song, fdt])
 
 
@@ -78,12 +86,13 @@ url_df = pd.read_csv('data/{0}/playlists.tsv'.format(sys.argv[1]), sep='\t')
 urls = [row[1] for index, row in url_df.iterrows()]
 i = 0
 b_width = sys.argv[2]
-for url in urls[:5]:
+for url in urls:
     try:
         i += 1
         print str(i) + url
         df = df.append(scrapeWFMUPlaylist(url, sys.argv[1], b_width))
-    except:
+    except Exception, e:
+        print('Failed to upload to ftp: '+ str(e))
         pass
 
 df.columns = ['artist','song','date']
