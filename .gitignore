@@ -7,6 +7,7 @@
 
 # RStudio files
 .Rproj.user/
+.RData
 
 # produced vignettes
 vignettes/*.html
@@ -22,3 +23,6 @@ venv/
 
 # conda env
 wfmu/
+
+# mac stuff
+.DS_Store
